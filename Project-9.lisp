@@ -148,12 +148,33 @@
 (defun tab (n)
   (loop for i from 1 to n do (format t " ")))
 
-(defun compute-subset (i j instances)
+(defun compute-subset (i j instances) ; TRY TO USE SOMETHING LIKE: (+ 1 (position (car *examples*) *examples*)) returns 1 instead of 0
 ; i and j are integers
 ; instances is a list of data instances
 ; returns a list of the i-th thru j-th elements of instances
 ; YOU MUST WRITE THIS FUNCTION
+(cond
+  ((null instances) nil)
+  ((< (+ 1 (position (car instances) *examples*)) i) (compute-subset i j (cdr instances))) ; Use position of car instances in *examples* find position cdr list if less than i and recurse
+  ((equal i (+ 1 (position (car instances) *examples*))) (cons (car instances) (compute-subset i j (cdr instances)))) ; if i is equal to posistion than cons car on list and recurse
+  ((and (> (+ 1 (position (car instances) *examples*)) i) (<= (+ 1 (position (car instances) *examples*)) j) (cons (car instances) (compute-subset i j (cdr instances))))) ; if between i and j cons car instances on list and recurse 
+  (t (compute-subset i j (cdr instances))) ; otherwise, cdr list and recurse.
+  )
 )
+"""
+(let ((x 0))
+(cond
+  ((null instances) nil)
+  ((< (count2 x) i) (compute-subset i j (cdr instances))) ; if count is less than i then cdr recurse list.
+  ((equal i (count2 x)) (cons (car instances) (compute-subet i j (cdr instances)))) ; if i is equalt to count then cons the first element of instances a recurse the cdr instances
+  ((and (> (count2 x) i) (<= (count2 x) j) (cons (car instances) (compute-subset i j (cdr instances)))))
+  (t (compute-subset i j (cdr instances))) 
+  )
+)
+
+(defun count2 (x) ;count for our list for each element.
+(+ x 1)) ; returns a number
+"""
 
 (defun classify (instance tree)
 ; instance is a data instance from *examples*
