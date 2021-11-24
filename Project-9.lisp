@@ -176,11 +176,20 @@
 (+ x 1)) ; returns a number
 """
 
-(defun classify (instance tree)
+(defun classify (instance tree) ;instance is our data-set while tree will be our produced tree.
+; GOAL: The goal of this function is to take in our data and return what the classifcaion of it is. So for *examples*=aardvark would be 1 while *examples*=catfish would be 4.
 ; instance is a data instance from *examples*
 ; tree is a decision tree produced by id3
 ; Return the class value predicted by the decision tree for instance
 ; YOU MUST WRITE THIS FUNCTION
+(cond 
+  ((atom tree) (return-from classify tree)) ; if tree is an atom then return the tree.
+  ((= (get.value (first tree) instance) (first (assoc (get.value (first tree) instance) (cdr tree)))) (classify instance (second (assoc (get.value (first tree) instance) (cdr tree))))) ; checks if if value of first is equal to value of second. If so recurse classify.
+  ; The second value will be the assoc of the get.value through our tree. Once found we only use the the first value of the list. If they are equal recurse classify with the second assoc of that same instance.
+  (t (princ "Didn't work"))
+
+  )
+
   )
 
 (defun testing (testcases tree)
@@ -198,3 +207,56 @@
 ; returns the percentage error from n-fold cross-validation on the instances in examples
 ; YOU MUST WRITE THIS FUNCTION
 )
+
+(defun test(tree)
+(print (classify (nth 1 *examples*) tree))
+(print (classify (nth 2 *examples*) tree))
+(print (classify (nth 3 *examples*) tree))
+(print (classify (nth 4 *examples*) tree))
+(print (classify (nth 5 *examples*) tree))
+(print (classify (nth 6 *examples*) tree))
+(print (classify (nth 7 *examples*) tree))
+(print (classify (nth 8 *examples*) tree))
+(print (classify (nth 9 *examples*) tree))
+(print (classify (nth 10 *examples*) tree))
+(print (classify (nth 11 *examples*) tree))
+)
+"""
+TREE1 OUTPUT
+(LEGS (5 7) (8 7) (6 (AQUATIC (1 7) (0 6))) (2 (HAIR (0 2) (1 1)))
+ (0 (FINS (1 (EGGS (0 1) (1 4))) (0 (TOOTHED (1 3) (0 7)))))
+ (4 (HAIR (0 (AQUATIC (0 3) (1 (TOOTHED (0 7) (1 5))))) (1 1))))
+
+TREE1 OUTPUT MADE PRETTY
+ LEGS
+ = 5 => 7
+ = 8 => 7
+ = 6
+     AQUATIC
+      = 1 => 7
+      = 0 => 6
+ = 2
+     HAIR
+      = 0 => 2
+      = 1 => 1
+ = 0
+     FINS
+      = 1
+          EGGS
+           = 0 => 1
+           = 1 => 4
+      = 0
+          TOOTHED
+           = 1 => 3
+           = 0 => 7
+ = 4
+     HAIR
+      = 0
+          AQUATIC
+           = 0 => 3
+           = 1
+               TOOTHED
+                = 0 => 7
+                = 1 => 5
+      = 1 => 1
+ """
