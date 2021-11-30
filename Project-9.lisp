@@ -196,7 +196,21 @@
 ; testcases is a list of data instances to be used as testcases
 ; tree is a decision tree  
 ; returns the number of instances in testcases that are classified correctly
-; YOU MUST WRITE THIS FUNCTION  
+; YOU MUST WRITE THIS FUNCTION 
+; testcases will be all of *examples* and tree will just be from id3. We will used classify from above to test. We will need to use type? to test if it is
+;the right classified item. 
+
+;E.G If (get (nth 2 testcases) 'TYPE?) is equal to (classify (nth 0 testcases) tree) then increment 1. Otherwise, we can print that it is not equal.
+; We will have to replace nth with car. Then cdr through the list.
+
+(cond 
+((null testcases) 0) ; use 0 cause we are adding.
+
+((= (get (car testcases) 'TYPE?) (classify (car testcases) tree)) (+ 1 (testing (cdr testcases) tree))) ; if TYPE? is equal to the value from classify. Add 1.
+
+(t (testing (cdr testcases) tree)) ;Otherwise just recurse.
+
+)
 )
 
 (defun cross-validate (n examples size)
