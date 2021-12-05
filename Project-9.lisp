@@ -184,9 +184,9 @@
 ; YOU MUST WRITE THIS FUNCTION
 (cond 
   ((atom tree) (return-from classify tree)) ; if tree is an atom then return the tree.
-  ((= (get.value (first tree) instance) (first (assoc (get.value (first tree) instance) (cdr tree)))) (classify instance (second (assoc (get.value (first tree) instance) (cdr tree))))) ; checks if if value of first is equal to value of second. If so recurse classify.
+  ((equal (get.value (first tree) instance) (first (assoc (get.value (first tree) instance) (cdr tree)))) (classify instance (second (assoc (get.value (first tree) instance) (cdr tree))))) ; checks if if value of first is equal to value of second. If so recurse classify.
   ; The second value will be the assoc of the get.value through our tree. Once found we only use the the first value of the list. If they are equal recurse classify with the second assoc of that same instance.
-  (t (princ "Didn't work"))
+  (t 0)
 
   )
 
@@ -214,16 +214,27 @@
 )
 
 (defun cross-validate (n examples size)
-; n is an integer
+; n is an integer. n = 4 and size = 100
 ; examples is a list of data instances (in our case, it will be *examples*)
 ; size is the number of instances in examples 
 ; size must be evenly divisible by n
 ; returns the percentage error from n-fold cross-validation on the instances in examples
 ; YOU MUST WRITE THIS FUNCTION
 )
+(defun divisible-by-n (size n)
+(zerop (mod size n))
+)
 
-(defun test(tree)
-(print (classify (nth 1 *examples*) tree))
+(defun test(tree i)
+(print (nth (+ i 1) *examples*))
+(print (classify (nth (+ i 1) *examples*) tree))
+(if (<= i 99)
+(test tree (+ i 1))
+(princ "End of i")
+)
+)
+
+"""
 (print (classify (nth 2 *examples*) tree))
 (print (classify (nth 3 *examples*) tree))
 (print (classify (nth 4 *examples*) tree))
@@ -235,6 +246,7 @@
 (print (classify (nth 10 *examples*) tree))
 (print (classify (nth 11 *examples*) tree))
 )
+"""
 """
 TREE1 OUTPUT
 (LEGS (5 7) (8 7) (6 (AQUATIC (1 7) (0 6))) (2 (HAIR (0 2) (1 1)))
