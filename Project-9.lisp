@@ -191,8 +191,8 @@
   )
 
   )
-
-(defun testing (testcases tree)
+; testcases = test data. tree = train data
+(defun testing (testcases tree) 
 ; testcases is a list of data instances to be used as testcases
 ; tree is a decision tree  
 ; returns the number of instances in testcases that are classified correctly
@@ -220,7 +220,17 @@
 ; size must be evenly divisible by n
 ; returns the percentage error from n-fold cross-validation on the instances in examples
 ; YOU MUST WRITE THIS FUNCTION
+(if (not (divisible-by-n size n))  ; e.g: n-fold = 25
+  nil
+(let* ((n-fold (/ size n ))
+  (test_fold (compute-subet (+ n-fold 1) (* n-fold n)))
+) 
+
+(cond 
+((divisible-by-n size n) (testing ())) ; have size reduced each time by amout of n-fold. e.g n=4 n-fold=25
+
 )
+)))
 (defun divisible-by-n (size n)
 (zerop (mod size n))
 )
