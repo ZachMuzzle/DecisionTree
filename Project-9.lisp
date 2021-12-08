@@ -223,7 +223,23 @@
 (if (not (divisible-by-n size n))  ; e.g: n-fold = 25
   nil
 (let* ((n-fold (/ size n ))
-  (test_fold (compute-subet (+ n-fold 1) (* n-fold n)))
+
+  (first_bin (/ n-fold n-fold))
+
+  (first_last_bin (n-fold))
+
+  (last_first_bin_test (+ 1 (- size n-fold))) ; maybe can work for all first bins. SIZE and N change each passthrough. n-fold is always the same.
+
+  (first_bin ())
+  (last_last_bin_test (size)) ;size is changed each time e.g size = 100 then size = 75 etc.
+
+  (train_bin (- size n-fold))
+
+
+
+
+  (test_fold (compute-subet (last_first_bin_test) (last_last_bin_test) examples ))
+  (train_fold_subset ())
 ) 
 
 (cond 
@@ -231,8 +247,14 @@
 
 )
 )))
+
 (defun divisible-by-n (size n)
 (zerop (mod size n))
+)
+
+(defun increment_value (i)
+
+
 )
 
 (defun test(tree i)
