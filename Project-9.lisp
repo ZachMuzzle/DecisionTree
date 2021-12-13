@@ -182,14 +182,15 @@
 ; tree is a decision tree produced by id3
 ; Return the class value predicted by the decision tree for instance
 ; YOU MUST WRITE THIS FUNCTION
+
 (cond 
   ((atom tree) (return-from classify tree)) ; if tree is an atom then return the tree.
-  ((equal (get.value (first tree) instance) (first (assoc (get.value (first tree) instance) (cdr tree)))) (classify instance (second (assoc (get.value (first tree) instance) (cdr tree))))) ; checks if if value of first is equal to value of second. If so recurse classify.
+  ((equal (get.value (car tree) instance) (car (assoc (get.value (car tree) instance) (cdr tree)))) (classify instance (cadr (assoc (get.value (car tree) instance) (cdr tree))))) ; checks if if value of first is equal to value of second. If so recurse classify.
   ; The second value will be the assoc of the get.value through our tree. Once found we only use the the first value of the list. If they are equal recurse classify with the second assoc of that same instance.
   (t 0)
 
   )
-
+  ;(break "End of classify")
   )
 
 (defun testing (testcases tree)
@@ -202,15 +203,15 @@
 
 ;E.G If (get (nth 2 testcases) 'TYPE?) is equal to (classify (nth 0 testcases) tree) then increment 1. Otherwise, we can print that it is not equal.
 ; We will have to replace nth with car. Then cdr through the list.
-
+;(break "Start of testing function")
 (cond 
 ((null testcases) 0) ; use 0 cause we are adding.
-
 ((= (get (car testcases) 'TYPE?) (classify (car testcases) tree)) (+ 1 (testing (cdr testcases) tree))) ; if TYPE? is equal to the value from classify. Add 1.
 
 (t (testing (cdr testcases) tree)) ;Otherwise just recurse.
 
 )
+;(break "End of testing fun")
 )
 
 (defun cross-validate (n examples size)
@@ -220,10 +221,49 @@
 ; size must be evenly divisible by n
 ; returns the percentage error from n-fold cross-validation on the instances in examples
 ; YOU MUST WRITE THIS FUNCTION
-)
-(defun divisible-by-n (size n)
+
+(if (not (divisible-by-n size n))
+  nil
+  (float (/ (apply '+ (helper n n examples size)) (/ size n))) ; calls helper to do most of the work. ; USE APPLY HERE to add all together then divide by folds
+))
+
+
+(defun divisible-by-n (size n) ; function to test if divisble or not
 (zerop (mod size n))
 )
+
+(defun helper (x n examples size)
+;(break "At start of in helper")
+(if ( > x 100)
+  nil
+(let* ((test-before (- x (- n 1)))
+  (test-after x))
+
+; COND statement takes in arguments and test if in between or not and spits back a list to then to the addition on
+(cond 
+((= n x) (cons (error_rate n (testing (compute-subset test-before test-after examples) (id3 (compute-subset (+ x 1) 100 examples) *att-class* *attributes*))) (helper (+ x n) n examples size)))
+((and (> x n ) (< x 100)) (cons (error_rate n (testing (compute-subset test-before test-after examples) (id3 (append (compute-subset 1 (- x n) examples) (compute-subset (+ x 1) 100 examples)) *att-class* *attributes*))) (helper (+ x n) n examples size)))
+((= x 100) (cons (error_rate n (testing (compute-subset test-before test-after examples) (id3 (compute-subset (- n (- n 1)) (- x n) examples) *att-class* *attributes*))) (helper (+ x n) n examples size)))
+
+(t nil)
+
+)
+)))
+
+(defun square (x) ; square for MSE
+;(break "Start of square function")
+(if  (numberp x) 
+(* x x)
+nil
+))
+
+(defun error_rate (n x) ; caclulate error rate
+;(break "Start of error_rate function")
+(if  (numberp x) 
+(float (/ (abs (- x n)) n))
+nil
+))
+
 
 (defun test(tree i)
 (print (nth (+ i 1) *examples*))
