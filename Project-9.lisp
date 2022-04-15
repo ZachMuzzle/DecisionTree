@@ -215,7 +215,7 @@
 )
 
 (defun cross-validate (n examples size)
-; n is an integer. n = 4 and size = 100
+; n is an integer. n = 25 and size = 100
 ; examples is a list of data instances (in our case, it will be *examples*)
 ; size is the number of instances in examples 
 ; size must be evenly divisible by n
@@ -234,18 +234,18 @@
 
 (defun helper (x n examples size)
 ;(break "At start of in helper")
-(if ( > x 100)
+(if ( > x 100) ; Checks if x is greater than 100
   nil
-(let* ((test-before (- x (- n 1)))
-  (test-after x))
+(let* ((test-before (- x (- n 1))) ; test-before = subtract n - 1 and then x - (n-1) from previous e.g. 25-1 = 24 then 25 - 24 = 1
+  (test-after x)) ; just x. e.g. 25
 
-; COND statement takes in arguments and test if in between or not and spits back a list to then to the addition on
+; COND statement takes in arguments and test if in between or not and spits back a list to then do the addition on
 (cond 
-((= n x) (cons (error_rate n (testing (compute-subset test-before test-after examples) (id3 (compute-subset (+ x 1) 100 examples) *att-class* *attributes*))) (helper (+ x n) n examples size)))
-((and (> x n ) (< x 100)) (cons (error_rate n (testing (compute-subset test-before test-after examples) (id3 (append (compute-subset 1 (- x n) examples) (compute-subset (+ x 1) 100 examples)) *att-class* *attributes*))) (helper (+ x n) n examples size)))
-((= x 100) (cons (error_rate n (testing (compute-subset test-before test-after examples) (id3 (compute-subset (- n (- n 1)) (- x n) examples) *att-class* *attributes*))) (helper (+ x n) n examples size)))
+((= n x) (cons (error_rate n (testing (compute-subset test-before test-after examples) (id3 (compute-subset (+ x 1) 100 examples) *att-class* *attributes*))) (helper (+ x n) n examples size))) ; recurse helper with x and n added e.g. helper(50 25 examples size)
+((and (> x n ) (< x 100)) (cons (error_rate n (testing (compute-subset test-before test-after examples) (id3 (append (compute-subset 1 (- x n) examples) (compute-subset (+ x 1) 100 examples)) *att-class* *attributes*))) (helper (+ x n) n examples size))) ; recurse same way. But, with new numbers for first variable
+((= x 100) (cons (error_rate n (testing (compute-subset test-before test-after examples) (id3 (compute-subset (- n (- n 1)) (- x n) examples) *att-class* *attributes*))) (helper (+ x n) n examples size))) ; recurse same way. But, with new numbers for first variable.
 
-(t nil)
+(t nil) ; returns nil 
 
 )
 )))
